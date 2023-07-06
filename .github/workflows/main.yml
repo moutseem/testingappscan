@@ -1,21 +1,37 @@
-name: AppScan Scan
+name: AppScan SAST
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  appscan-scan:
-    name: AppScan Scan
+  appscan:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run AppScan scan
-        uses: IBM/appscan-action@v1
+      - name: Setup AppScan
+        run: |
+          curl -fsSL https://get.hclappscan.com/install.sh | sudo sh
+          sudo /opt/hclappscan/appscan.sh setup --licenseKey ${{ secrets.APPSCAN_LICENSE_KEY }}
+
+      - name: Run AppScan
+        run: |
+          /opt/hclappscan/appscan.sh analyze \
+            --applicationName MyApplication \
+            --scanName MyScan \
+            --sourceLocation ${{ github.workspace }} \
+            --reportFormat html \
+            --reportLocation ${{ github.workspace }}/reports
+
+      - name: Upload AppScan Report
+        uses: actions/upload-artifact@v2
         with:
-          api-key: ${{ secrets.APPSCAN_API_KEY }}
-          target: https://your-app-url.com
+          name: AppScan Report
+          path: ${{ github.workspace }}/reports
