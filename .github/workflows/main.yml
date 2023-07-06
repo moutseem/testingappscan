@@ -1,0 +1,21 @@
+name: AppScan Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  appscan-scan:
+    name: AppScan Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run AppScan scan
+        uses: IBM/appscan-action@v1
+        with:
+          api-key: ${{ secrets.APPSCAN_API_KEY }}
+          target: https://your-app-url.com
