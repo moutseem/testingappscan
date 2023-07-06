@@ -15,3 +15,4 @@ jobs:
           asoc_key: ${{secrets.ASOC_KEY}}
           asoc_secret: ${{secrets.ASOC_SECRET}}
           application_id: a9320435-541c-4a16-bebf-427d1e123999
+          
