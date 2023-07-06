@@ -1,37 +1,17 @@
-name: AppScan SAST
-
+name: "HCL AppScan SAST"
 on:
-  push:
+   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
-  appscan:
+  scan:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup AppScan
-        run: |
-          curl -fsSL https://get.hclappscan.com/install.sh | sudo sh
-          sudo /opt/hclappscan/appscan.sh setup --licenseKey ${{ secrets.APPSCAN_LICENSE_KEY }}
-
-      - name: Run AppScan
-        run: |
-          /opt/hclappscan/appscan.sh analyze \
-            --applicationName MyApplication \
-            --scanName MyScan \
-            --sourceLocation ${{ github.workspace }} \
-            --reportFormat html \
-            --reportLocation ${{ github.workspace }}/reports
-
-      - name: Upload AppScan Report
-        uses: actions/upload-artifact@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run AppScan SAST scan
+        uses: HCL-TECH-SOFTWARE/appscan-sast-action@v1.0.1
         with:
-          name: AppScan Report
-          path: ${{ github.workspace }}/reports
+          asoc_key: ${{secrets.ASOC_KEY}}
+          asoc_secret: ${{secrets.ASOC_SECRET}}
+          application_id: a9320435-541c-4a16-bebf-427d1e123999
