@@ -1,18 +1,20 @@
-name: "HCL AppScan CodeSweep"
+name: "HCL AppScan SAST"
 on:
-  push:
+   push:
     branches:
       - main
 jobs:
-  publish:
+  scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Publish issues to ASoC
-        uses: HCL-TECH-SOFTWARE/appscan-codesweep-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run AppScan SAST scan
+        uses: HCL-TECH-SOFTWARE/appscan-sast-action@v1.0.1
         with:
           asoc_key: ${{secrets.ASOC_KEY}}
           asoc_secret: ${{secrets.ASOC_SECRET}}
-          publish_on_merge: true
-          application_id: 4b48b679-d53e-4253-aebb-49bef9d56716
+          application_id: fc392271-a748-493c-a692-190a1c50f90f
+          
     env: 
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
